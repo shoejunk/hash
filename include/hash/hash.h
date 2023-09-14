@@ -1,6 +1,8 @@
 #pragma once
 
+// System
 #include <cstdint>
+#include <string>
 
 namespace NStk::NHash
 {
@@ -51,9 +53,7 @@ namespace NStk::NHash
 	constexpr uint32_t FNV1aHash(const char* key, uint32_t len, uint32_t seed=0)
 	{
 		constexpr uint32_t FNV_prime = 16777619;
-		constexpr uint32_t FNV_offset_basis = 2166136261;
-
-		uint32_t hash = FNV_offset_basis ^ seed;
+		uint32_t hash = seed;
 
 		for (uint32_t i = 0; i < len; i++)
 		{
@@ -77,10 +77,51 @@ namespace NStk::NHash
 		return uHash;
 	}
 
-	constexpr uint32_t Hash(const char* key, uint32_t len, uint32_t seed = 0)
+	class CHash
 	{
-		return FNV1aHash(key, len, seed);
+	public:
+		constexpr CHash(uint32_t uHash) : m_uHash(uHash) {}
+		constexpr CHash(char const* sKey, uint32_t uLen)
+			: CHash(FNV1aHash(sKey, uLen))
+		{
+		}
+
+		constexpr CHash(std::string sKey)
+			: CHash(FNV1aHash(sKey.c_str(), sKey.size()))
+		{
+		}
+
+		operator uint32_t() const { return m_uHash; }
+
+		constexpr bool operator==(const CHash& rhs) const
+		{
+			return m_uHash == rhs.m_uHash;
+		}
+
+		constexpr bool operator==(uint32_t rhs) const
+		{
+			return m_uHash == rhs;
+		}
+
+		constexpr CHash operator+(std::string const& sKey) const
+		{
+			return CHash(FNV1aHash(sKey.c_str(), sKey.size(), m_uHash));
+		}
+
+
+	private:
+		uint32_t m_uHash;
+	};
+	constexpr CHash kFooHash = CHash("foo", 3);
+	static_assert(kFooHash == FNV1aHash("foo", 3));
+	static_assert(CHash("foobaz", 6) == CHash("foo", 3) + std::string("baz"));
+	static_assert(CHash("foobaz", 6) == CHash("foobaz"));
+
+	constexpr CHash operator "" _h(const char* sKey, size_t len)
+	{
+		return CHash(sKey, len);
 	}
+	static_assert("foo"_h == CHash("foo"));
 
 	class CHashTable
 	{
