@@ -1,6 +1,5 @@
-// STK
-#include <hash/hash.h>
-#include <log/log.h>
+import stk.hash;
+import stk.log;
 
 using namespace NStk;
 using namespace NLog;
