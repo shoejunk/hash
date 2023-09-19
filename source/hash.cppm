@@ -106,8 +106,8 @@ export namespace NStk::NHash
 			return CHash(FNV1aHash(sKey.c_str(), sKey.size(), m_uHash));
 		}
 
-
-	private:
+	public:
+		// Intentionally make this public to allow CHashes to be used as non-type template parameters.
 		uint32_t m_uHash;
 	};
 	constexpr CHash kFooHash = CHash("foo", 3);
