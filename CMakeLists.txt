@@ -6,11 +6,8 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 project(
 	Hash
-	VERSION 2.1.0
+	VERSION 2.1.1
 	LANGUAGES CXX)
-
-# --- Turn on Modules ---
-set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API aa1f7df0-828a-4fcd-9afc-2dc80491aca7)
 
 # ---- Fetch CPM ----
 

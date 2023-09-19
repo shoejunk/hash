@@ -78,6 +78,7 @@ export namespace NStk::NHash
 	class CHash
 	{
 	public:
+		constexpr CHash() : m_uHash(0) {}
 		constexpr CHash(uint32_t uHash) : m_uHash(uHash) {}
 		constexpr CHash(char const* sKey, uint32_t uLen)
 			: CHash(FNV1aHash(sKey, uLen))
