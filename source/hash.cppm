@@ -85,8 +85,8 @@ export namespace NStk::NHash
 		{
 		}
 
-		constexpr CHash(std::string sKey)
-			: CHash(FNV1aHash(sKey.c_str(), sKey.size()))
+		constexpr CHash(std::string const& ksKey)
+			: CHash(FNV1aHash(ksKey.c_str(), ksKey.size()))
 		{
 		}
 
