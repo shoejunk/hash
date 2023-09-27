@@ -1,10 +1,13 @@
 export module stk.hash;
 
+#pragma warning(push)
+#pragma warning(disable: 5050) // _M_FP_PRECISE is defined in current command line and not in module command line
 import std.core;
+#pragma warning(pop)
 
-export namespace NStk::NHash
+export namespace stk::hash
 {
-	constexpr uint32_t MurmurHash3(const char* key, uint32_t len, uint32_t seed = 0)
+	constexpr uint32_t murmur_hash3(const char* key, uint32_t len, uint32_t seed = 0)
 	{
 		constexpr uint32_t c1 = 0xcc9e2d51;
 		constexpr uint32_t c2 = 0x1b873593;
@@ -48,101 +51,77 @@ export namespace NStk::NHash
 		return hash;
 	}
 
-	constexpr uint32_t FNV1aHash(const char* key, uint32_t len, uint32_t seed=0)
+	constexpr uint32_t fnv1a_hash(const char* key, uint32_t len, uint32_t seed=0)
 	{
-		constexpr uint32_t FNV_prime = 16777619;
+		constexpr uint32_t fnv_prime = 16777619;
 		uint32_t hash = seed;
 
 		for (uint32_t i = 0; i < len; i++)
 		{
 			hash ^= key[i];
-			hash *= FNV_prime;
+			hash *= fnv_prime;
 		}
 
 		return hash;
 	}
 
-	constexpr uint32_t UniversalHash(const char* sStr, uint32_t uSeed = 0)
+	constexpr uint32_t universal_hash(const char* str, uint32_t seed = 0)
 	{
-		constexpr uint32_t uMod = 1'000'000'009;  // Some large prime number
-		constexpr uint32_t uBase = 257;           // Prime larger than the size of the ASCII character set
+		constexpr uint32_t mod = 1'000'000'009;  // Some large prime number
+		constexpr uint32_t base = 257;           // Prime larger than the size of the ASCII character set
 
-		uint32_t uHash = uSeed;
-		for (uint32_t i = 0; sStr[i] != '\0'; ++i)
+		uint32_t hash = seed;
+		for (uint32_t i = 0; str[i] != '\0'; ++i)
 		{
-			uHash = (uHash * uBase + sStr[i]) % uMod;
+			hash = (hash * base + str[i]) % mod;
 		}
-		return uHash;
+		return hash;
 	}
 
-	class CHash
+	class hash
 	{
 	public:
-		constexpr CHash() : m_uHash(0) {}
-		constexpr CHash(uint32_t uHash) : m_uHash(uHash) {}
-		constexpr CHash(char const* sKey, uint32_t uLen)
-			: CHash(FNV1aHash(sKey, uLen))
+		constexpr hash() : m_hash(0) {}
+		constexpr hash(uint32_t h) : m_hash(h) {}
+		constexpr hash(char const* key, uint32_t len)
+			: hash(fnv1a_hash(key, len))
 		{
 		}
 
-		constexpr CHash(std::string const& ksKey)
-			: CHash(FNV1aHash(ksKey.c_str(), ksKey.size()))
+		constexpr hash(std::string const& key)
+			: hash(fnv1a_hash(key.c_str(), key.size()))
 		{
 		}
 
-		operator uint32_t() const { return m_uHash; }
+		operator uint32_t() const { return m_hash; }
 
-		constexpr bool operator==(const CHash& rhs) const
+		constexpr bool operator==(const hash& rhs) const
 		{
-			return m_uHash == rhs.m_uHash;
+			return m_hash == rhs.m_hash;
 		}
 
 		constexpr bool operator==(uint32_t rhs) const
 		{
-			return m_uHash == rhs;
+			return m_hash == rhs;
 		}
 
-		constexpr CHash operator+(std::string const& sKey) const
+		constexpr hash operator+(std::string const& key) const
 		{
-			return CHash(FNV1aHash(sKey.c_str(), sKey.size(), m_uHash));
+			return hash(fnv1a_hash(key.c_str(), key.size(), m_hash));
 		}
 
 	public:
 		// Intentionally make this public to allow CHashes to be used as non-type template parameters.
-		uint32_t m_uHash;
+		uint32_t m_hash;
 	};
-	constexpr CHash kFooHash = CHash("foo", 3);
-	static_assert(kFooHash == FNV1aHash("foo", 3));
-	static_assert(CHash("foobaz", 6) == CHash("foo", 3) + std::string("baz"));
-	static_assert(CHash("foobaz", 6) == CHash("foobaz"));
+	constexpr hash foo_hash = hash("foo", 3);
+	static_assert(foo_hash == fnv1a_hash("foo", 3));
+	static_assert(hash("foobaz", 6) == hash("foo", 3) + std::string("baz"));
+	static_assert(hash("foobaz", 6) == hash("foobaz"));
 
-	constexpr CHash operator "" _h(const char* sKey, size_t len)
+	constexpr hash operator "" _h(const char* key, size_t len)
 	{
-		return CHash(sKey, len);
+		return hash(key, len);
 	}
-	static_assert("foo"_h == CHash("foo"));
-
-	class CHashTable
-	{
-	public:
-		constexpr uint32_t Insert(char const* ksStr)
-		{
-			uint32_t uHash = UniversalHash(ksStr);
-			uint32_t uIndex = uHash % 8;
-			m_aTable[uIndex].m_uHash = uHash;
-			m_aTable[uIndex].m_ksStr = ksStr;
-			return uIndex;
-		}
-
-	private:
-		struct SHashEntry
-		{
-			uint32_t m_uHash;
-			char const* m_ksStr;
-		};
-
-		SHashEntry m_aTable[8];
-	};
-
-	static_assert(CHashTable().Insert("foo") == 4);
+	static_assert("foo"_h == hash("foo"));
 }
