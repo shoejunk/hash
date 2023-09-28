@@ -10,6 +10,17 @@ using namespace NStk;
 using namespace NLog;
 using namespace stk::hash;
 
+#include "hash/hash.h"
+
+class test
+{
+public:
+	void go()
+	{
+		Log("test go!\n");
+	}
+};
+
 int main(int argc, char* argv[])
 {
 	hash hash1(std::string("Hello World!"));
@@ -20,6 +31,12 @@ int main(int argc, char* argv[])
 		hash hash2(argv[1], std::strlen(argv[1]));
 		Log("The hash of %s is %u\n", argv[1], hash2);
 	}
+
+	test t;
+	std::unordered_map<hash, std::any, hash_hasher> class_map;
+	class_map[CLASS_HASH(test)] = t;
+	test& t2 = std::any_cast<test&>(class_map[CLASS_HASH(test)]);
+	t2.go();
 
 	return 0;
 }

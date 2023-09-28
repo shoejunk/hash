@@ -4,7 +4,7 @@ export module stk.hash;
 #pragma warning(disable: 5050) // _M_FP_PRECISE is defined in current command line and not in module command line
 import std.core;
 #pragma warning(pop)
-
+ 
 export namespace stk::hash
 {
 	constexpr uint32_t murmur_hash3(const char* key, uint32_t len, uint32_t seed = 0)
@@ -118,6 +118,15 @@ export namespace stk::hash
 	static_assert(foo_hash == fnv1a_hash("foo", 3));
 	static_assert(hash("foobaz", 6) == hash("foo", 3) + std::string("baz"));
 	static_assert(hash("foobaz", 6) == hash("foobaz"));
+
+	// This can be used as a hash function for std::unordered_map
+	struct hash_hasher
+	{
+		std::size_t operator()(const hash& h) const
+		{
+			return h.m_hash; // Use the m_hash member as the hash value
+		}
+	};
 
 	constexpr hash operator "" _h(const char* key, size_t len)
 	{

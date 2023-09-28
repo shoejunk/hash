@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 project(
 	hash
-	VERSION 3.0.0
+	VERSION 3.1.0
 	LANGUAGES CXX)
 
 # ---- Fetch CPM ----
@@ -33,6 +33,7 @@ CPMAddPackage(
 )
 
 # ---- Add source files ----
+file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cppm")
 
 # ---- Create library ----
