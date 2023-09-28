@@ -133,4 +133,10 @@ export namespace stk::hash
 		return hash(key, len);
 	}
 	static_assert("foo"_h == hash("foo"));
+
+	template<class T>
+	hash hash_of()
+	{
+		return hash(typeid(T).name());
+	}
 }

@@ -10,8 +10,6 @@ using namespace NStk;
 using namespace NLog;
 using namespace stk::hash;
 
-#include "hash/hash.h"
-
 class test
 {
 public:
@@ -34,8 +32,8 @@ int main(int argc, char* argv[])
 
 	test t;
 	std::unordered_map<hash, std::any, hash_hasher> class_map;
-	class_map[CLASS_HASH(test)] = t;
-	test& t2 = std::any_cast<test&>(class_map[CLASS_HASH(test)]);
+	class_map[hash_of<test>()] = t;
+	test& t2 = std::any_cast<test&>(class_map[hash_of<test>()]);
 	t2.go();
 
 	return 0;
