@@ -5,7 +5,7 @@ export module stk.hash;
 import std.core;
 #pragma warning(pop)
  
-export namespace stk::hash
+export namespace stk::hash_ns
 {
 	constexpr uint32_t murmur_hash3(const char* key, uint32_t len, uint32_t seed = 0)
 	{

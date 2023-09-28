@@ -8,7 +8,7 @@ import std.core;
 
 using namespace NStk;
 using namespace NLog;
-using namespace stk::hash;
+using namespace stk::hash_ns;
 
 class test
 {
