@@ -6,28 +6,32 @@ import stk.log;
 import std.core;
 #pragma warning(pop)
 
-using namespace NStk;
-using namespace NLog;
-using namespace stk::hash_ns;
+using namespace stk;
 
 class test
 {
 public:
 	void go()
 	{
-		Log("test go!\n");
+		log("test go!\n");
 	}
 };
+
+template<>
+constexpr stk::hash stk::hash_of<test>()
+{
+	return stk::hash("test");
+}
 
 int main(int argc, char* argv[])
 {
 	hash hash1(std::string("Hello World!"));
-	Log("The hash of Hello World! is %u\n", hash1);
+	log("The hash of Hello World! is %u\n", hash1);
 
 	if (argc > 1)
 	{
 		hash hash2(argv[1], std::strlen(argv[1]));
-		Log("The hash of %s is %u\n", argv[1], hash2);
+		log("The hash of %s is %u\n", argv[1], hash2);
 	}
 
 	test t;

@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 project(
 	hash
-	VERSION 4.0.0
+	VERSION 5.0.0
 	LANGUAGES CXX)
 
 # ---- Fetch CPM ----
@@ -29,11 +29,11 @@ CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 CPMAddPackage(
 	NAME math
 	GITHUB_REPOSITORY shoejunk/math
-	VERSION 2.0.0
+	VERSION 3.0.0
 )
 
 # ---- Add source files ----
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cppm")
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.ixx")
 
 # ---- Create library ----
 

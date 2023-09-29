@@ -5,7 +5,7 @@ export module stk.hash;
 import std.core;
 #pragma warning(pop)
  
-export namespace stk::hash_ns
+export namespace stk
 {
 	constexpr uint32_t murmur_hash3(const char* key, uint32_t len, uint32_t seed = 0)
 	{
@@ -135,8 +135,8 @@ export namespace stk::hash_ns
 	static_assert("foo"_h == hash("foo"));
 
 	template<class T>
-	hash hash_of()
+	constexpr hash hash_of()
 	{
-		return hash(typeid(T).name());
+		static_assert(std::is_same<T, T>{} == false, "Invalid type for hash_of");
 	}
 }
