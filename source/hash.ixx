@@ -78,24 +78,24 @@ export namespace stk
 		return hash;
 	}
 
-	class hash
+	class c_hash
 	{
 	public:
-		constexpr hash() : m_hash(0) {}
-		constexpr hash(uint32_t h) : m_hash(h) {}
-		constexpr hash(char const* key, uint32_t len)
-			: hash(fnv1a_hash(key, len))
+		constexpr c_hash() : m_hash(0) {}
+		constexpr c_hash(uint32_t h) : m_hash(h) {}
+		constexpr c_hash(char const* key, uint32_t len)
+			: c_hash(fnv1a_hash(key, len))
 		{
 		}
 
-		constexpr hash(std::string const& key)
-			: hash(fnv1a_hash(key.c_str(), key.size()))
+		constexpr c_hash(std::string const& key)
+			: c_hash(fnv1a_hash(key.c_str(), key.size()))
 		{
 		}
 
 		operator uint32_t() const { return m_hash; }
 
-		constexpr bool operator==(const hash& rhs) const
+		constexpr bool operator==(const c_hash& rhs) const
 		{
 			return m_hash == rhs.m_hash;
 		}
@@ -105,38 +105,38 @@ export namespace stk
 			return m_hash == rhs;
 		}
 
-		constexpr hash operator+(std::string const& key) const
+		constexpr c_hash operator+(std::string const& key) const
 		{
-			return hash(fnv1a_hash(key.c_str(), key.size(), m_hash));
+			return c_hash(fnv1a_hash(key.c_str(), key.size(), m_hash));
 		}
 
 	public:
 		// Intentionally make this public to allow CHashes to be used as non-type template parameters.
 		uint32_t m_hash;
 	};
-	constexpr hash foo_hash = hash("foo", 3);
+	constexpr c_hash foo_hash = c_hash("foo", 3);
 	static_assert(foo_hash == fnv1a_hash("foo", 3));
-	static_assert(hash("foobaz", 6) == hash("foo", 3) + std::string("baz"));
-	static_assert(hash("foobaz", 6) == hash("foobaz"));
+	static_assert(c_hash("foobaz", 6) == c_hash("foo", 3) + std::string("baz"));
+	static_assert(c_hash("foobaz", 6) == c_hash("foobaz"));
 
 	// This can be used as a hash function for std::unordered_map
-	struct hash_hasher
+	struct s_hash_hasher
 	{
-		std::size_t operator()(const hash& h) const
+		std::size_t operator()(const c_hash& h) const
 		{
 			return h.m_hash; // Use the m_hash member as the hash value
 		}
 	};
 
-	constexpr hash operator "" _h(const char* key, size_t len)
+	constexpr c_hash operator "" _h(const char* key, size_t len)
 	{
-		return hash(key, len);
+		return c_hash(key, len);
 	}
-	static_assert("foo"_h == hash("foo"));
+	static_assert("foo"_h == c_hash("foo"));
 
 	template<class T>
-	constexpr hash hash_of()
+	constexpr c_hash hash()
 	{
-		static_assert(std::is_same<T, T>{} == false, "Invalid type for hash_of");
+		static_assert(std::is_same<T, T>{} == false, "Invalid type for hash");
 	}
 }

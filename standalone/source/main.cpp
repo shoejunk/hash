@@ -8,7 +8,7 @@ import std.core;
 
 using namespace stk;
 
-class test
+class c_test
 {
 public:
 	void go()
@@ -18,26 +18,26 @@ public:
 };
 
 template<>
-constexpr stk::hash stk::hash_of<test>()
+constexpr stk::c_hash stk::hash<c_test>()
 {
-	return stk::hash("test");
+	return stk::c_hash("test");
 }
 
 int main(int argc, char* argv[])
 {
-	hash hash1(std::string("Hello World!"));
+	c_hash hash1(std::string("Hello World!"));
 	log("The hash of Hello World! is %u\n", hash1);
 
 	if (argc > 1)
 	{
-		hash hash2(argv[1], std::strlen(argv[1]));
+		c_hash hash2(argv[1], std::strlen(argv[1]));
 		log("The hash of %s is %u\n", argv[1], hash2);
 	}
 
-	test t;
-	std::unordered_map<hash, std::any, hash_hasher> class_map;
-	class_map[hash_of<test>()] = t;
-	test& t2 = std::any_cast<test&>(class_map[hash_of<test>()]);
+	c_test t;
+	std::unordered_map<c_hash, std::any, s_hash_hasher> class_map;
+	class_map[hash<c_test>()] = t;
+	c_test& t2 = std::any_cast<c_test&>(class_map[hash<c_test>()]);
 	t2.go();
 
 	return 0;
