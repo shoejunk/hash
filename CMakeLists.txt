@@ -25,13 +25,6 @@ include(${CPM_DOWNLOAD_LOCATION})
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 
-# Add package: shoejunk/math
-CPMAddPackage(
-	NAME math
-	GITHUB_REPOSITORY shoejunk/math
-	VERSION 3.0.0
-)
-
 # ---- Add source files ----
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.ixx")
 
