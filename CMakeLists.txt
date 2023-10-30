@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 project(
 	hash
-	VERSION 6.0.0
+	VERSION 6.0.1
 	LANGUAGES CXX)
 
 # ---- Fetch CPM ----
