@@ -1,26 +1,25 @@
 export module stk.hash;
 
-import <cstdint>;
 import std;
  
 export namespace stk
 {
-	constexpr uint32_t murmur_hash3(const char* key, uint32_t len, uint32_t seed = 0)
+	constexpr std::uint32_t murmur_hash3(const char* key, std::uint32_t len, std::uint32_t seed = 0)
 	{
-		constexpr uint32_t c1 = 0xcc9e2d51;
-		constexpr uint32_t c2 = 0x1b873593;
-		constexpr uint32_t r1 = 15;
-		constexpr uint32_t r2 = 13;
-		constexpr uint32_t m = 5;
-		constexpr uint32_t n = 0xe6546b64;
+		constexpr std::uint32_t c1 = 0xcc9e2d51;
+		constexpr std::uint32_t c2 = 0x1b873593;
+		constexpr std::uint32_t r1 = 15;
+		constexpr std::uint32_t r2 = 13;
+		constexpr std::uint32_t m = 5;
+		constexpr std::uint32_t n = 0xe6546b64;
 
-		uint32_t hash = seed;
+		std::uint32_t hash = seed;
 
 		const int numBlocks = len / 4;
-		const uint32_t* blocks = (const uint32_t*)key;
+		const std::uint32_t* blocks = (const std::uint32_t*)key;
 
 		for (int i = 0; i < numBlocks; i++) {
-			uint32_t k = blocks[i];
+			std::uint32_t k = blocks[i];
 			k *= c1;
 			k = (k << r1) | (k >> (32 - r1)); // Rotate left
 			k *= c2;
@@ -29,8 +28,8 @@ export namespace stk
 			hash = ((hash << r2) | (hash >> (32 - r2))) * m + n;
 		}
 
-		const uint8_t* tail = (const uint8_t*)(key + numBlocks * 4);
-		uint32_t k1 = 0;
+		const std::uint8_t* tail = (const std::uint8_t*)(key + numBlocks * 4);
+		std::uint32_t k1 = 0;
 
 		switch (len & 3) {
 		case 3: k1 ^= tail[2] << 16;
@@ -49,12 +48,12 @@ export namespace stk
 		return hash;
 	}
 
-	constexpr uint32_t fnv1a_hash(const char* key, uint32_t len, uint32_t seed=0)
+	constexpr std::uint32_t fnv1a_hash(const char* key, std::uint32_t len, std::uint32_t seed=0)
 	{
-		constexpr uint32_t fnv_prime = 16777619;
-		uint32_t hash = seed;
+		constexpr std::uint32_t fnv_prime = 16777619;
+		std::uint32_t hash = seed;
 
-		for (uint32_t i = 0; i < len; i++)
+		for (std::uint32_t i = 0; i < len; i++)
 		{
 			hash ^= key[i];
 			hash *= fnv_prime;
@@ -63,13 +62,13 @@ export namespace stk
 		return hash;
 	}
 
-	constexpr uint32_t universal_hash(const char* str, uint32_t seed = 0)
+	constexpr std::uint32_t universal_hash(const char* str, std::uint32_t seed = 0)
 	{
-		constexpr uint32_t mod = 1'000'000'009;  // Some large prime number
-		constexpr uint32_t base = 257;           // Prime larger than the size of the ASCII character set
+		constexpr std::uint32_t mod = 1'000'000'009;  // Some large prime number
+		constexpr std::uint32_t base = 257;           // Prime larger than the size of the ASCII character set
 
-		uint32_t hash = seed;
-		for (uint32_t i = 0; str[i] != '\0'; ++i)
+		std::uint32_t hash = seed;
+		for (std::uint32_t i = 0; str[i] != '\0'; ++i)
 		{
 			hash = (hash * base + str[i]) % mod;
 		}
@@ -80,8 +79,8 @@ export namespace stk
 	{
 	public:
 		constexpr c_hash() : m_hash(0) {}
-		constexpr c_hash(uint32_t h) : m_hash(h) {}
-		constexpr c_hash(char const* key, uint32_t len)
+		constexpr c_hash(std::uint32_t h) : m_hash(h) {}
+		constexpr c_hash(char const* key, std::uint32_t len)
 			: c_hash(fnv1a_hash(key, len))
 		{
 		}
@@ -91,14 +90,14 @@ export namespace stk
 		{
 		}
 
-		operator uint32_t() const { return m_hash; }
+		operator std::uint32_t() const { return m_hash; }
 
 		constexpr bool operator==(const c_hash& rhs) const
 		{
 			return m_hash == rhs.m_hash;
 		}
 
-		constexpr bool operator==(uint32_t rhs) const
+		constexpr bool operator==(std::uint32_t rhs) const
 		{
 			return m_hash == rhs;
 		}
@@ -110,7 +109,7 @@ export namespace stk
 
 	public:
 		// Intentionally make this public to allow CHashes to be used as non-type template parameters.
-		uint32_t m_hash;
+		std::uint32_t m_hash;
 	};
 	constexpr c_hash foo_hash = c_hash("foo", 3);
 	static_assert(foo_hash == fnv1a_hash("foo", 3));
