@@ -22,12 +22,12 @@ constexpr stk::c_hash stk::hash<c_test>()
 int main(int argc, char* argv[])
 {
 	c_hash hash1(std::string("Hello World!"));
-	log("The hash of Hello World! is %u\n", hash1);
+	debugln("The hash of Hello World! is {}", std::uint32_t(hash1));
 
 	if (argc > 1)
 	{
 		c_hash hash2(argv[1], std::strlen(argv[1]));
-		log("The hash of %s is %u\n", argv[1], hash2);
+		debugln("The hash of {} is {}", argv[1], std::uint32_t(hash2));
 	}
 
 	c_test t;

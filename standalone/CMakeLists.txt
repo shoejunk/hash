@@ -22,7 +22,8 @@ CPMAddPackage(NAME hash SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 CPMAddPackage(
 	NAME log
 	GITHUB_REPOSITORY shoejunk/log
-	VERSION 0.6.0
+	#VERSION 0.6.0
+	GIT_TAG main
 )
 
 # ---- Create standalone executable ----
