@@ -25,6 +25,14 @@ include(${CPM_DOWNLOAD_LOCATION})
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 
+# Add package: shoejunk/se
+CPMAddPackage(
+	NAME se
+	GITHUB_REPOSITORY shoejunk/se
+	#VERSION 0.1.0
+	GIT_TAG main
+)
+
 # ---- Add source files ----
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.ixx")
 
@@ -42,6 +50,8 @@ target_include_directories(
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
 )
+
+target_link_libraries(${PROJECT_NAME} se)
 
 # the location where the project's version header will be placed should match the project's regular
 # header paths
